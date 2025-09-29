@@ -10,6 +10,7 @@ import { CommandPalette } from "@/components/CommandPalette";
 import { ShortcutsDialog } from "@/components/ShortcutsDialog";
 import { TitleBar } from "@/components/TitleBar";
 import { PageTransition } from "@/components/PageTransition";
+import { UpdateNotification } from "@/components/ui/update-notification";
 import "./globals.css";
 
 const inter = Inter({
@@ -61,6 +62,7 @@ export default function RootLayout({
                 </PageTransition>
                 <CommandPalette />
                 <ShortcutsDialog />
+                <UpdateNotification />
               </KeyboardShortcutsProvider>
             </ListsProvider>
           </AuthProvider>

@@ -5,6 +5,10 @@
   "description": "Levent Elektrik Kurumsal Yönetim Sistemi",
   "author": "Levent Elektrik",
   "private": true,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lve1749/levent-elektrik-erp.git"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -61,6 +65,8 @@
     "cmdk": "^1.1.1",
     "critters": "^0.0.23",
     "date-fns": "^4.1.0",
+    "electron-log": "^5.4.3",
+    "electron-updater": "^6.6.2",
     "exceljs": "^4.4.0",
     "file-saver": "^2.0.5",
     "framer-motion": "^12.23.12",
@@ -159,6 +165,15 @@
       "runAfterFinish": false,
       "warningsAsErrors": false
     },
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "lve1749",
+        "repo": "levent-elektrik-erp",
+        "private": true,
+        "releaseType": "release"
+      }
+    ],
     "extraResources": [
       {
         "from": ".next/standalone",

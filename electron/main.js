@@ -1,8 +1,9 @@
-const { app, BrowserWindow, Menu, dialog } = require('electron');
+const { app, BrowserWindow, Menu, dialog, ipcMain } = require('electron');
 const path = require('path');
 const { fork } = require('child_process');
 const http = require('http');
 const fs = require('fs');
+const { initAutoUpdater } = require('./auto-updater');
 
 let mainWindow;
 let nextServer;
@@ -71,7 +72,8 @@ const isDev = process.env.NODE_ENV === 'development' || (!app.isPackaged && proc
         nodeIntegration: false,
         contextIsolation: true,
         webSecurity: false, // Development'ta cookie sorunlarını önler
-        partition: 'persist:leventelektrik' // Session'ı saklar
+        partition: 'persist:leventelektrik', // Session'ı saklar
+        preload: path.join(__dirname, 'preload.js')
       },
       icon: process.platform === 'win32' 
         ? path.join(__dirname, '../public/icon.ico')
@@ -270,6 +272,11 @@ if (!gotTheLock) {
     // Server başlamasını bekle
     setTimeout(() => {
       createWindow();
+      
+      // Initialize auto-updater after window is created
+      if (app.isPackaged) {
+        initAutoUpdater(mainWindow);
+      }
     }, 3000);
   });
 }
