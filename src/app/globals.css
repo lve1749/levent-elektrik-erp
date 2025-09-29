@@ -1,0 +1,732 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+/* Custom animations for AlertDialog */
+@keyframes animate-in {
+  from {
+    opacity: 0;
+    transform: scale(0.9) translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes animate-out {
+  from {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.9) translateY(-10px);
+  }
+}
+
+@keyframes fade-in-0 {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fade-out-0 {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes zoom-in-90 {
+  from {
+    transform: scale(0.9);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+@keyframes zoom-out-90 {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(0.9);
+  }
+}
+
+@keyframes zoom-in-95 {
+  from {
+    transform: scale(0.95);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+@keyframes zoom-out-95 {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(0.95);
+  }
+}
+
+@keyframes slide-in-from-top-2 {
+  from {
+    transform: translateY(-2%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes slide-out-to-top-2 {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-2%);
+  }
+}
+
+@keyframes slide-in-from-right-2 {
+  from {
+    transform: translateX(2%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes slide-in-from-left-2 {
+  from {
+    transform: translateX(-2%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes slide-in-from-bottom-2 {
+  from {
+    transform: translateY(2%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+/* Animation utilities */
+.animate-in {
+  animation-name: animate-in;
+  animation-duration: 300ms;
+  animation-fill-mode: both;
+  animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.animate-out {
+  animation-name: animate-out;
+  animation-duration: 200ms;
+  animation-fill-mode: both;
+  animation-timing-function: cubic-bezier(0.4, 0, 0.6, 1);
+}
+
+.fade-in-0 {
+  animation-name: fade-in-0;
+}
+
+.fade-out-0 {
+  animation-name: fade-out-0;
+}
+
+.zoom-in-90 {
+  animation-name: zoom-in-90;
+}
+
+.zoom-out-90 {
+  animation-name: zoom-out-90;
+}
+
+.zoom-in-95 {
+  animation-name: zoom-in-95;
+}
+
+.zoom-out-95 {
+  animation-name: zoom-out-95;
+}
+
+.slide-in-from-top-2 {
+  animation-name: slide-in-from-top-2;
+}
+
+.slide-out-to-top-2 {
+  animation-name: slide-out-to-top-2;
+}
+
+.slide-in-from-right-2 {
+  animation-name: slide-in-from-right-2;
+}
+
+.slide-in-from-left-2 {
+  animation-name: slide-in-from-left-2;
+}
+
+.slide-in-from-bottom-2 {
+  animation-name: slide-in-from-bottom-2;
+}
+
+/* Dropdown specific animations */
+[data-radix-popper-content-wrapper] {
+  animation-duration: 0.3s !important;
+  animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+/* Dropdown Menu and Context Menu smooth animations */
+[data-state="open"][data-side],
+[data-radix-menu-content][data-state="open"] {
+  animation: dropdown-show 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+[data-state="closed"][data-side],
+[data-radix-menu-content][data-state="closed"] {
+  animation: dropdown-hide 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes dropdown-show {
+  from {
+    opacity: 0;
+    transform: scale(0.92) translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes dropdown-hide {
+  from {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.95) translateY(-4px);
+  }
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-inter);
+  --font-inter: var(--font-inter);
+  --font-mono: var(--font-geist-mono);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+:root {
+  --radius: 0.625rem;
+  --background: oklch(0.99 0.00 0);
+  --foreground: oklch(0.145 0 0);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.145 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0 0);
+  --primary: oklch(0.205 0 0);
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.97 0 0);
+  --secondary-foreground: oklch(0.205 0 0);
+  --muted: oklch(0.97 0 0);
+  --muted-foreground: oklch(0.556 0 0);
+  --accent: oklch(0.97 0 0);
+  --accent-foreground: oklch(0.205 0 0);
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: oklch(0.922 0 0);
+  --input: oklch(0.922 0 0);
+  --ring: oklch(0.708 0 0);
+  --chart-1: oklch(0.646 0.222 41.116);
+  --chart-2: oklch(0.6 0.118 184.704);
+  --chart-3: oklch(0.398 0.07 227.392);
+  --chart-4: oklch(0.828 0.189 84.429);
+  --chart-5: oklch(0.769 0.188 70.08);
+  --sidebar: oklch(0.97 0.00 0);
+  --sidebar-foreground: oklch(0.145 0 0);
+  --sidebar-primary: oklch(0.205 0 0);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.94 0 0);
+  --sidebar-accent-foreground: oklch(0.205 0 0);
+  --sidebar-border: oklch(0.90 0 0);
+  --sidebar-ring: oklch(0.708 0 0);
+}
+
+.dark {
+  --background: oklch(0.145 0 0);
+  --foreground: oklch(0.985 0 0);
+  --card: oklch(0.145 0 0);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.145 0 0);
+  --popover-foreground: oklch(0.985 0 0);
+  --primary: oklch(0.985 0 0);
+  --primary-foreground: oklch(0.205 0 0);
+  --secondary: oklch(0.238 0 0);
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted: oklch(0.238 0 0);
+  --muted-foreground: oklch(0.703 0 0);
+  --accent: oklch(0.238 0 0);
+  --accent-foreground: oklch(0.985 0 0);
+  --destructive: oklch(0.577 0.245 27.325);
+  --destructive-foreground: oklch(0.985 0 0);
+  --border: oklch(0.238 0 0);
+  --input: oklch(0.238 0 0);
+  --ring: oklch(0.9 0 0);
+  --chart-1: oklch(0.73 0.189 66.612);
+  --chart-2: oklch(0.564 0.182 246.815);
+  --chart-3: oklch(0.512 0.099 227.392);
+  --chart-4: oklch(0.623 0.214 104.609);
+  --chart-5: oklch(0.637 0.287 59.067);
+  --sidebar: oklch(0.20 0.00 0);
+  --sidebar-foreground: oklch(0.883 0 0);
+  --sidebar-primary: oklch(0.708 0.145 231.366);
+  --sidebar-primary-foreground: oklch(0.075 0.016 257.101);
+  --sidebar-accent: oklch(0.14 0.00 0);
+  --sidebar-accent-foreground: oklch(0.883 0 0);
+  --sidebar-border: oklch(0.27 0.00 0);
+  --sidebar-ring: oklch(0.708 0 0);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+
+  /* Global thin scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: oklch(0.72 0.00 0);
+    border-radius: 4px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: oklch(0.65 0.00 0);
+  }
+  
+  /* Hide all scrollbar buttons globally */
+  ::-webkit-scrollbar-button {
+    display: none !important;
+    height: 0 !important;
+    width: 0 !important;
+  }
+
+  .dark ::-webkit-scrollbar-thumb {
+    background: oklch(0.44 0.00 0);
+  }
+
+  .dark ::-webkit-scrollbar-thumb:hover {
+    background: oklch(0.50 0.00 0);
+  }
+}
+
+/* Inter font family utility class */
+.font-inter {
+  font-family: var(--font-inter), system-ui, -apple-system, sans-serif;
+}
+
+/* Custom Scrollbar Styles for Modal */
+.modal-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: oklch(0.72 0.00 0) transparent;
+}
+
+/* Smooth accordion animations */
+@keyframes accordion-down {
+  from {
+    height: 0;
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    height: var(--radix-collapsible-content-height);
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes accordion-up {
+  from {
+    height: var(--radix-collapsible-content-height);
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    height: 0;
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+}
+
+.animate-accordion-down {
+  animation: accordion-down 300ms cubic-bezier(0.4, 0.0, 0.2, 1);
+}
+
+.animate-accordion-up {
+  animation: accordion-up 300ms cubic-bezier(0.4, 0.0, 0.2, 1);
+}
+
+.modal-scrollbar::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.modal-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+  border-radius: 3px;
+}
+
+.modal-scrollbar::-webkit-scrollbar-thumb {
+  background: oklch(0.72 0.00 0);
+  border-radius: 3px;
+  min-height: 20px;
+}
+
+.modal-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: oklch(0.65 0.00 0);
+}
+
+/* Hide scrollbar arrows/buttons */
+.modal-scrollbar::-webkit-scrollbar-button,
+.modal-scrollbar::-webkit-scrollbar-button:single-button,
+.modal-scrollbar::-webkit-scrollbar-button:vertical:decrement,
+.modal-scrollbar::-webkit-scrollbar-button:vertical:increment {
+  display: none !important;
+  height: 0 !important;
+  width: 0 !important;
+}
+
+.modal-scrollbar::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+.dark .modal-scrollbar {
+  scrollbar-color: oklch(0.44 0.00 0) transparent;
+}
+
+.dark .modal-scrollbar::-webkit-scrollbar-thumb {
+  background: oklch(0.44 0.00 0);
+}
+
+.dark .modal-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: oklch(0.50 0.00 0);
+}
+
+/* Custom Scrollbar for ShortcutsDialog */
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: oklch(0.72 0.00 0) transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+  border-radius: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: oklch(0.72 0.00 0);
+  border-radius: 4px;
+  min-height: 30px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: oklch(0.65 0.00 0);
+}
+
+.custom-scrollbar::-webkit-scrollbar-button {
+  display: none;
+}
+
+.custom-scrollbar::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+.dark .custom-scrollbar {
+  scrollbar-color: oklch(0.44 0.00 0) transparent;
+}
+
+.dark .custom-scrollbar::-webkit-scrollbar-thumb {
+  background: oklch(0.44 0.00 0);
+}
+
+.dark .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: oklch(0.50 0.00 0);
+}
+
+/* Command Palette Scrollbar */
+.command-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: oklch(0.72 0.00 0) transparent;
+  scrollbar-gutter: stable;
+}
+
+.command-scrollbar::-webkit-scrollbar {
+  width: 4px !important;
+  height: 4px !important;
+}
+
+.command-scrollbar::-webkit-scrollbar-track {
+  background: transparent !important;
+  border-radius: 2px;
+}
+
+.command-scrollbar::-webkit-scrollbar-thumb {
+  background: oklch(0.72 0.00 0) !important;
+  border-radius: 2px;
+  min-height: 20px;
+}
+
+.command-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: oklch(0.72 0.00 0) !important;
+}
+
+/* Force hide all types of scrollbar buttons */
+.command-scrollbar::-webkit-scrollbar-button {
+  display: none !important;
+  height: 0px !important;
+  width: 0px !important;
+}
+
+.command-scrollbar::-webkit-scrollbar-button:start:decrement,
+.command-scrollbar::-webkit-scrollbar-button:end:increment,
+.command-scrollbar::-webkit-scrollbar-button:vertical:start:decrement,
+.command-scrollbar::-webkit-scrollbar-button:vertical:end:increment {
+  display: none !important;
+}
+
+.command-scrollbar::-webkit-scrollbar-corner {
+  background: transparent !important;
+}
+
+/* Dark mode */
+.dark .command-scrollbar {
+  scrollbar-color: oklch(0.44 0.00 0) transparent;
+}
+
+.dark .command-scrollbar::-webkit-scrollbar-thumb {
+  background: oklch(0.44 0.00 0) !important;
+}
+
+.dark .command-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: oklch(0.44 0.00 0) !important;
+}
+
+/* Electron Title Bar Drag Styles */
+.app-drag {
+  -webkit-app-region: drag;
+  app-region: drag;
+  user-select: none;
+}
+
+.app-no-drag {
+  -webkit-app-region: no-drag;
+  app-region: no-drag;
+}
+
+/* Sonner Toast Styles */
+/* Toast container styles */
+[data-sonner-toast] {
+  font-family: var(--font-inter), system-ui, -apple-system, sans-serif !important;
+  border-radius: 8px !important;
+}
+
+/* Light mode toast (default) */
+[data-sonner-toast] {
+  background: oklch(0.99 0.00 0) !important;
+  color: oklch(0.20 0.00 0) !important;
+  border: 1px solid oklch(0.92 0.00 0) !important;
+}
+
+/* Dark mode toast */
+.dark [data-sonner-toast] {
+  background: oklch(0.23 0.00 0) !important;
+  color: oklch(0.92 0.00 0) !important;
+  border: 1px solid oklch(0.30 0.00 0) !important;
+}
+
+/* Description text colors - Light mode */
+[data-sonner-toast] [data-description] {
+  color: oklch(0.40 0.00 0) !important;
+}
+
+/* Description text colors - Dark mode */
+.dark [data-sonner-toast] [data-description] {
+  color: oklch(0.72 0.00 0) !important;
+}
+
+/* Success toast icon styling */
+[data-sonner-toast][data-type="success"] [data-icon] {
+  color: oklch(0.62 0.18 145) !important; /* Yeşil */
+}
+
+/* Error toast icon styling */
+[data-sonner-toast][data-type="error"] [data-icon] {
+  color: oklch(0.55 0.22 27) !important; /* Kırmızı */
+}
+
+/* Warning toast icon styling */
+[data-sonner-toast][data-type="warning"] [data-icon] {
+  color: oklch(0.68 0.19 45) !important; /* Turuncu */
+}
+
+/* Info toast icon styling */
+[data-sonner-toast][data-type="info"] [data-icon] {
+  color: oklch(0.55 0.22 263) !important; /* Mavi */
+}
+
+/* Kanban Board Custom Scrollbar */
+.kanban-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: oklch(0.80 0.00 0) transparent;
+}
+
+.kanban-scrollbar::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+.kanban-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+  border-radius: 2.5px;
+}
+
+.kanban-scrollbar::-webkit-scrollbar-thumb {
+  background: oklch(0.80 0.00 0);
+  border-radius: 2.5px;
+  min-height: 30px;
+}
+
+.kanban-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: oklch(0.70 0.00 0);
+}
+
+/* Dark mode kanban scrollbar */
+.dark .kanban-scrollbar {
+  scrollbar-color: oklch(0.35 0.00 0) transparent;
+}
+
+.dark .kanban-scrollbar::-webkit-scrollbar-thumb {
+  background: oklch(0.35 0.00 0);
+}
+
+.dark .kanban-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: oklch(0.45 0.00 0);
+}
+
+/* Stock Analysis Table Scrollbar */
+.stock-table-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: oklch(0.72 0.00 0) transparent;
+}
+
+.stock-table-scrollbar::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+.stock-table-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+  border-radius: 2px;
+}
+
+.stock-table-scrollbar::-webkit-scrollbar-thumb {
+  background: oklch(0.72 0.00 0);
+  border-radius: 2px;
+  min-height: 20px;
+  min-width: 20px;
+}
+
+.stock-table-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: oklch(0.72 0.00 0);
+}
+
+/* Hide scrollbar arrows/buttons */
+.stock-table-scrollbar::-webkit-scrollbar-button,
+.stock-table-scrollbar::-webkit-scrollbar-button:single-button,
+.stock-table-scrollbar::-webkit-scrollbar-button:vertical:decrement,
+.stock-table-scrollbar::-webkit-scrollbar-button:vertical:increment,
+.stock-table-scrollbar::-webkit-scrollbar-button:horizontal:decrement,
+.stock-table-scrollbar::-webkit-scrollbar-button:horizontal:increment {
+  display: none !important;
+  height: 0 !important;
+  width: 0 !important;
+}
+
+.stock-table-scrollbar::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+/* Dark mode */
+.dark .stock-table-scrollbar {
+  scrollbar-color: oklch(0.44 0.00 0) transparent;
+}
+
+.dark .stock-table-scrollbar::-webkit-scrollbar-thumb {
+  background: oklch(0.44 0.00 0);
+}
+
+.dark .stock-table-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: oklch(0.44 0.00 0);
+}

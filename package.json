@@ -1,0 +1,214 @@
+{
+  "name": "levent-elektrik",
+  "version": "1.0.2",
+  "main": "electron/main.js",
+  "description": "Levent Elektrik Kurumsal Yönetim Sistemi",
+  "author": "Levent Elektrik",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "electron:dev": "set NODE_ENV=development && electron .",
+    "electron:build-next": "next build",
+    "electron:start": "set NODE_ENV=production && electron .",
+    "build:prod": "npm run build && npm run copy:static && electron-builder --win",
+    "copy:static": "node scripts/copy-static.js",
+    "dist:win": "npm run electron:build-next && electron-builder --win",
+    "clean": "rmdir /s /q dist .next 2>nul || echo Clean complete",
+    "rebuild": "npm run clean && npm run build && npm run build:prod",
+    "verify": "node electron/verify-build.js",
+    "test:installer": "dist\\\"Levent Elektrik Setup 1.0.2.exe\"",
+    "build:msi": "npm run build && npm run copy:static && electron-builder --win msi",
+    "prebuild:msi": "npm run clean:dist",
+    "clean:dist": "rmdir /s /q dist 2>nul || echo Dist cleaned"
+  },
+  "dependencies": {
+    "@base-ui-components/react": "^1.0.0-beta.1",
+    "@dnd-kit/core": "^6.3.1",
+    "@dnd-kit/modifiers": "^9.0.0",
+    "@dnd-kit/sortable": "^10.0.0",
+    "@dnd-kit/utilities": "^3.2.2",
+    "@headless-tree/core": "^1.4.0",
+    "@headless-tree/react": "^1.4.0",
+    "@hookform/resolvers": "^5.2.1",
+    "@prisma/client": "^6.12.0",
+    "@radix-ui/react-accordion": "^1.2.12",
+    "@radix-ui/react-alert-dialog": "^1.1.15",
+    "@radix-ui/react-avatar": "^1.1.10",
+    "@radix-ui/react-collapsible": "^1.1.12",
+    "@radix-ui/react-context-menu": "^2.2.16",
+    "@radix-ui/react-dialog": "^1.1.15",
+    "@radix-ui/react-direction": "^1.1.1",
+    "@radix-ui/react-dropdown-menu": "^2.1.16",
+    "@radix-ui/react-label": "^2.1.7",
+    "@radix-ui/react-popover": "^1.1.14",
+    "@radix-ui/react-radio-group": "^1.3.8",
+    "@radix-ui/react-scroll-area": "^1.2.10",
+    "@radix-ui/react-select": "^2.2.6",
+    "@radix-ui/react-separator": "^1.1.7",
+    "@radix-ui/react-slot": "^1.2.3",
+    "@radix-ui/react-tabs": "^1.1.13",
+    "@radix-ui/react-tooltip": "^1.2.8",
+    "@remixicon/react": "^4.6.0",
+    "@tanstack/react-table": "^8.21.3",
+    "@types/qrcode": "^1.5.5",
+    "@types/react-window": "^1.8.8",
+    "axios": "^1.11.0",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "cmdk": "^1.1.1",
+    "critters": "^0.0.23",
+    "date-fns": "^4.1.0",
+    "exceljs": "^4.4.0",
+    "file-saver": "^2.0.5",
+    "framer-motion": "^12.23.12",
+    "jspdf": "^3.0.1",
+    "jspdf-autotable": "^5.0.2",
+    "lightningcss": "^1.30.1",
+    "lucide-react": "^0.526.0",
+    "motion": "^12.23.12",
+    "mssql": "^11.0.1",
+    "next": "^15.5.4",
+    "next-themes": "^0.4.6",
+    "prisma": "^6.12.0",
+    "qrcode": "^1.5.4",
+    "radix-ui": "^1.4.3",
+    "react": "19.1.0",
+    "react-aria-components": "^1.11.0",
+    "react-day-picker": "^9.8.1",
+    "react-dom": "19.1.0",
+    "react-hook-form": "^7.62.0",
+    "react-window": "^1.8.11",
+    "react-window-infinite-loader": "^1.0.10",
+    "recharts": "^2.15.4",
+    "resend": "^6.1.0",
+    "sharp": "^0.34.4",
+    "sonner": "^2.0.7",
+    "tailwind-merge": "^3.3.1",
+    "tailwind-scrollbar": "^4.0.2",
+    "xlsx-js-style": "^1.2.0",
+    "zod": "^4.0.14"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3",
+    "@svgr/webpack": "^8.1.0",
+    "@tailwindcss/postcss": "^4",
+    "@types/file-saver": "^2.0.7",
+    "@types/jspdf": "^2.0.0",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "concurrently": "^9.2.1",
+    "electron": "^38.1.2",
+    "electron-builder": "^26.0.12",
+    "eslint": "^9",
+    "eslint-config-next": "15.4.4",
+    "fs-extra": "^11.3.2",
+    "node-fetch": "^2.7.0",
+    "tailwindcss": "^4",
+    "tw-animate-css": "^1.3.6",
+    "typescript": "^5",
+    "wait-on": "^8.0.4",
+    "webpack-bundle-analyzer": "^4.10.2"
+  },
+  "build": {
+    "appId": "com.leventelektrik.app",
+    "productName": "Levent Elektrik",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "electron/**/*",
+      ".next/**/*",
+      ".next/standalone/**/*",
+      "public/**/*",
+      "server.js",
+      "package.json",
+      "prisma/**/*",
+      "!**/*.map",
+      "!node_modules/@img/sharp-darwin*/**",
+      "!node_modules/@img/sharp-linux*/**",
+      "!node_modules/@img/sharp-libvips-darwin*/**",
+      "!node_modules/@img/sharp-libvips-linux*/**",
+      "!node_modules/@img/sharp-wasm32*/**",
+      "!**/@img/sharp-darwin*/**",
+      "!**/@img/sharp-linux*/**",
+      "!**/sharp-darwin*/**",
+      "!**/sharp-linux*/**"
+    ],
+    "asar": false,
+    "win": {
+      "target": [
+        {
+          "target": "msi",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "public/icon.ico"
+    },
+    "msi": {
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Levent Elektrik",
+      "upgradeCode": "a7b3c2d1-e4f5-6789-0abc-def123456789",
+      "perMachine": false,
+      "runAfterFinish": false,
+      "warningsAsErrors": false
+    },
+    "extraResources": [
+      {
+        "from": ".next/standalone",
+        "to": "app/.next/standalone",
+        "filter": [
+          "**/*"
+        ]
+      },
+      {
+        "from": ".next/static",
+        "to": "app/.next/standalone/.next/static",
+        "filter": [
+          "**/*"
+        ]
+      },
+      {
+        "from": "public",
+        "to": "app/.next/standalone/public",
+        "filter": [
+          "**/*"
+        ]
+      },
+      {
+        "from": "node_modules/.prisma",
+        "to": "app/node_modules/.prisma",
+        "filter": [
+          "**/*"
+        ]
+      },
+      {
+        "from": "prisma",
+        "to": "app/prisma",
+        "filter": [
+          "*.prisma"
+        ]
+      },
+      {
+        "from": ".env.local",
+        "to": "app/.env.local",
+        "filter": [
+          "**/*"
+        ]
+      },
+      {
+        "from": ".env",
+        "to": "app/.env",
+        "filter": [
+          "**/*"
+        ]
+      }
+    ]
+  }
+}
