@@ -38,39 +38,45 @@ const yamlPath = path.join(__dirname, '../dist/latest.yml');
 fs.writeFileSync(yamlPath, yamlContent, 'utf8');
 console.log('latest.yml oluşturuldu!');
 
-// Shell seçimi
-const isWindows = process.platform === 'win32';
-const shell = isWindows ? 'powershell.exe' : true;
-
-// GitHub CLI ile yükle
+// GitHub CLI ile yükle - execSync yerine spawn kullan
 try {
-  // Repository'yi belirt
+  const { spawnSync } = require('child_process');
+  
+  // Repository
   const repo = 'lve1749/levent-elektrik-releases';
   
   // Release var mı kontrol et
-  try {
-    execSync(`gh release view v${version} --repo ${repo}`, { 
-      encoding: 'utf8',
-      stdio: 'pipe',
-      shell: shell
-    });
-    console.log(`Release v${version} mevcut.`);
-  } catch (e) {
-    console.log(`Release v${version} bulunamadı, oluşturuluyor...`);
-    // Release yoksa oluştur
-    execSync(`gh release create v${version} --repo ${repo} --title "Version ${version}" --notes "Release ${version}"`, {
-      stdio: 'inherit',
-      shell: shell
-    });
-  }
-  
-  // latest.yml'i yükle
-  execSync(`gh release upload v${version} "${yamlPath}" --repo ${repo} --clobber`, { 
-    stdio: 'inherit',
-    shell: shell
+  const checkResult = spawnSync('gh', ['release', 'view', `v${version}`, '--repo', repo], {
+    encoding: 'utf8',
+    shell: false
   });
   
-  console.log('✅ latest.yml GitHub\'a otomatik yüklendi!');
+  if (checkResult.status !== 0) {
+    console.log(`Release v${version} bulunamadı, oluşturuluyor...`);
+    // Release oluştur
+    const createResult = spawnSync('gh', [
+      'release', 'create', `v${version}`,
+      '--repo', repo,
+      '--title', `Version ${version}`,
+      '--notes', `Release ${version}`
+    ], { stdio: 'inherit', shell: false });
+  } else {
+    console.log(`Release v${version} mevcut.`);
+  }
+  
+  // latest.yml yükle
+  const uploadResult = spawnSync('gh', [
+    'release', 'upload', `v${version}`,
+    yamlPath,
+    '--repo', repo,
+    '--clobber'
+  ], { stdio: 'inherit', shell: false });
+  
+  if (uploadResult.status === 0) {
+    console.log('✅ latest.yml GitHub\'a otomatik yüklendi!');
+  } else {
+    console.log('⚠️ Yükleme hatası');
+  }
 } catch (error) {
   console.log('⚠️ GitHub CLI hatası:', error.message);
   console.log('Manuel yükleme gerekebilir.');

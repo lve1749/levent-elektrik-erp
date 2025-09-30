@@ -14,6 +14,7 @@ import { NavMain } from "@/components/nav-main"
 import { NavProjects } from "@/components/nav-projects"
 import { NavSecondary } from "@/components/nav-secondary"
 import { NavUser } from "@/components/nav-user"
+import { SidebarUpdateCard } from "@/components/ui/sidebar-update-card"
 import {
   Sidebar,
   SidebarContent,
@@ -120,7 +121,8 @@ export function AppSidebar({ lastRefreshTime, alertCount, refreshHistory = [], .
         />
       </SidebarContent>
       <SidebarFooter>
-        <div className="w-full border-t border-[oklch(0.92_0.00_0_/_0.5)] dark:border-[oklch(0.27_0.00_0_/_0.5)] mb-2" />
+        <SidebarUpdateCard />
+        <div className="mx-2 border-t border-[oklch(0.92_0.00_0_/_0.5)] dark:border-[oklch(0.27_0.00_0_/_0.5)] my-1" />
         <NavUser user={userData} />
       </SidebarFooter>
     </Sidebar>
