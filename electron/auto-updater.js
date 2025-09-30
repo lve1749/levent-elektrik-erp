@@ -155,6 +155,9 @@ ipcMain.handle('get-update-info', () => {
 function initAutoUpdater(window) {
   setMainWindow(window);
   
+  // Token gerekmez, public repo kullanıyoruz
+  // GitHub public releases otomatik olarak electron-updater tarafından bulunur
+  
   // Check for updates immediately on app start
   setTimeout(() => {
     if (app.isPackaged) {
