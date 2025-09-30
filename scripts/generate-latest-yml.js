@@ -38,6 +38,10 @@ const yamlPath = path.join(__dirname, '../dist/latest.yml');
 fs.writeFileSync(yamlPath, yamlContent, 'utf8');
 console.log('latest.yml oluşturuldu!');
 
+// Shell seçimi
+const isWindows = process.platform === 'win32';
+const shell = isWindows ? 'powershell.exe' : true;
+
 // GitHub CLI ile yükle
 try {
   // Repository'yi belirt
@@ -47,20 +51,23 @@ try {
   try {
     execSync(`gh release view v${version} --repo ${repo}`, { 
       encoding: 'utf8',
-      stdio: 'pipe'
+      stdio: 'pipe',
+      shell: shell
     });
     console.log(`Release v${version} mevcut.`);
   } catch (e) {
     console.log(`Release v${version} bulunamadı, oluşturuluyor...`);
     // Release yoksa oluştur
     execSync(`gh release create v${version} --repo ${repo} --title "Version ${version}" --notes "Release ${version}"`, {
-      stdio: 'inherit'
+      stdio: 'inherit',
+      shell: shell
     });
   }
   
   // latest.yml'i yükle
   execSync(`gh release upload v${version} "${yamlPath}" --repo ${repo} --clobber`, { 
-    stdio: 'inherit'
+    stdio: 'inherit',
+    shell: shell
   });
   
   console.log('✅ latest.yml GitHub\'a otomatik yüklendi!');
