@@ -83,6 +83,9 @@ contextBridge.exposeInMainWorld('electron', {
     getVersion: () => ipcRenderer.invoke('get-current-version'),
   },
   
+  // Direct app version exposure via IPC
+  appVersion: async () => await ipcRenderer.invoke('get-current-version'),
+  
   // Platform info
   platform: process.platform,
   arch: process.arch,

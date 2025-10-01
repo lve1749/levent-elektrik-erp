@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Download, ArrowUpCircle, ChevronUp } from 'lucide-react';
 import { useSidebar } from '@/components/ui/sidebar';
@@ -10,11 +10,65 @@ import { motion, AnimatePresence } from 'framer-motion';
 export function SidebarUpdateCard() {
   const { state } = useSidebar();
   const [isExpanded, setIsExpanded] = useState(true);
+  const [currentVersion, setCurrentVersion] = useState('');
+  const [latestVersion, setLatestVersion] = useState('');
+  const [isUpdateAvailable, setIsUpdateAvailable] = useState(false);
   
-  // Version info (hardcoded for now)
-  const currentVersion = '1.0.5';  // Mevcut kurulu version
-  const newVersion = '1.0.6';       // Yeni version
-  const isUpdateAvailable = true;
+  useEffect(() => {
+    // Version karşılaştırma fonksiyonu
+    const compareVersions = (v1: string, v2: string) => {
+      const parts1 = v1.split('.').map(Number);
+      const parts2 = v2.split('.').map(Number);
+      
+      for (let i = 0; i < 3; i++) {
+        if (parts1[i] > parts2[i]) return 1;
+        if (parts1[i] < parts2[i]) return -1;
+      }
+      return 0;
+    };
+
+    // Mevcut version'u al (Electron'dan)
+    const getCurrentVersion = async () => {
+      if (typeof window !== 'undefined' && (window as any).electron) {
+        try {
+          // appVersion artık async bir fonksiyon
+          const version = await (window as any).electron.appVersion();
+          return version || '1.0.0';
+        } catch (error) {
+          console.error('Version alma hatası:', error);
+          return '1.0.0';
+        }
+      }
+      // Development ortamında package.json'dan al
+      return process.env.NEXT_PUBLIC_VERSION || '1.0.0';
+    };
+    
+    // GitHub'dan son version'u kontrol et
+    const checkLatestVersion = async () => {
+      try {
+        const response = await fetch('https://api.github.com/repos/lve1749/levent-elektrik-releases/releases/latest');
+        const data = await response.json();
+        const latest = data.tag_name?.replace('v', '') || '1.0.0';
+        
+        const current = await getCurrentVersion();
+        setCurrentVersion(current);
+        setLatestVersion(latest);
+        
+        // Düzgün version karşılaştırması
+        if (compareVersions(latest, current) > 0) {
+          setIsUpdateAvailable(true);
+        }
+      } catch (error) {
+        console.error('Version kontrol hatası:', error);
+      }
+    };
+    
+    checkLatestVersion();
+    // Her 30 dakikada bir kontrol et
+    const interval = setInterval(checkLatestVersion, 30 * 60 * 1000);
+    
+    return () => clearInterval(interval);
+  }, []);
   
   if (!isUpdateAvailable) return null;
   
@@ -32,7 +86,7 @@ export function SidebarUpdateCard() {
           variant="ghost"
           className="relative w-full h-10"
           onClick={handleDownload}
-          title={`Güncelleme mevcut: v${newVersion}`}
+          title={`Güncelleme mevcut: v${latestVersion}`}
         >
           <ArrowUpCircle className="h-5 w-5" />
           <span className="absolute -top-1 -right-1 h-3 w-3 bg-green-500 rounded-full animate-pulse" />
@@ -90,7 +144,7 @@ export function SidebarUpdateCard() {
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="text-[oklch(0.50_0.00_0)] dark:text-[oklch(0.62_0.00_0)]">Yeni:</span>
-                    <span className="font-mono text-green-600 dark:text-green-400">v{newVersion}</span>
+                    <span className="font-mono text-green-600 dark:text-green-400">v{latestVersion}</span>
                   </div>
                 </div>
               
