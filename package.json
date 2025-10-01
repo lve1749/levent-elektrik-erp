@@ -1,6 +1,6 @@
 {
   "name": "levent-elektrik",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "main": "electron/main.js",
   "description": "Levent Elektrik Kurumsal Yönetim Sistemi",
   "author": "Levent Elektrik",
@@ -23,7 +23,7 @@
     "clean": "rmdir /s /q dist .next 2>nul || echo Clean complete",
     "rebuild": "npm run clean && npm run build && npm run build:prod",
     "verify": "node electron/verify-build.js",
-    "test:installer": "dist\\\"Levent Elektrik Setup 1.0.6.exe\"",
+    "test:installer": "dist\\\"Levent Elektrik Setup 1.0.7.exe\"",
     "build:msi": "npm run build && npm run copy:static && electron-builder --win msi",
     "prebuild:msi": "npm run clean:dist",
     "clean:dist": "rmdir /s /q dist 2>nul || echo Dist cleaned"
