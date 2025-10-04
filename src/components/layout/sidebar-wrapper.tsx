@@ -3,6 +3,7 @@
 import { ReactNode, useEffect, useState } from 'react'
 import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar"
 import { AppSidebar } from "@/components/app-sidebar"
+import { useRefresh } from "@/contexts/RefreshContext"
 
 interface SidebarWrapperProps {
   children: ReactNode
@@ -14,7 +15,10 @@ interface SidebarWrapperProps {
 
 const SIDEBAR_COOKIE_NAME = "sidebar_state"
 
-export function SidebarWrapper({ children, lastRefreshTime, alertCount, refreshHistory = [], hideLastUpdate = false }: SidebarWrapperProps) {
+export function SidebarWrapper({ children, hideLastUpdate = false }: SidebarWrapperProps) {
+  // Context'ten refresh verilerini al
+  const { lastRefreshTime, alertCount, refreshHistory } = useRefresh()
+  
   // Cookie'den sidebar durumunu oku
   const [defaultOpen, setDefaultOpen] = useState(true)
   const [isClient, setIsClient] = useState(false)

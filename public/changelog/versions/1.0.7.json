@@ -1,0 +1,47 @@
+{
+  "id": "1",
+  "version": "1.0.7",
+  "title": "Stok Hareket Detay Güncellemeleri",
+  "description": "Grafik performansı iyileştirildi ve yeni filtreleme özellikleri eklendi. Kullanıcı deneyimini artırmak için sidebar optimizasyonları yapıldı.",
+  "date": "2025-01-02",
+  "image": "/changelog/images/2025/v1.0.7/hareket-detayi-dark.png",
+  "categories": [
+    {
+      "type": "features",
+      "title": "Yeni Özellikler",
+      "count": 3,
+      "items": [
+        "Gelişmiş grafik görünümü ile stok hareketlerini görselleştirme",
+        "Yeni filtreleme seçenekleri",
+        "Hızlı arama ve komut paleti"
+      ]
+    },
+    {
+      "type": "improvements",
+      "title": "İyileştirmeler",
+      "count": 5,
+      "items": [
+        "Sidebar performansı optimize edildi",
+        "Sayfa geçiş animasyonları iyileştirildi",
+        "Dark mode renk paleti güncellendi",
+        "Responsive tasarım iyileştirmeleri",
+        "Klavye kısayolları eklendi"
+      ]
+    },
+    {
+      "type": "fixes",
+      "title": "Düzeltmeler",
+      "count": 8,
+      "items": [
+        "Türkçe karakter encoding problemi çözüldü",
+        "Duplicate sidebar render sorunu giderildi",
+        "Memory leak problemleri düzeltildi",
+        "API timeout hataları çözüldü",
+        "Form validation hataları düzeltildi",
+        "Chart render problemleri giderildi",
+        "Mobile görünüm hataları düzeltildi",
+        "Export fonksiyonu hataları çözüldü"
+      ]
+    }
+  ]
+}

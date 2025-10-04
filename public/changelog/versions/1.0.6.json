@@ -1,0 +1,30 @@
+{
+  "id": "2",
+  "version": "1.0.6",
+  "title": "Yeni Dashboard ve Analiz Özellikleri",
+  "description": "Kapsamlı stok analiz sistemi ve modern dashboard tasarımı ile tanışın.",
+  "date": "2024-12-25",
+  "categories": [
+    {
+      "type": "features",
+      "title": "Yeni Özellikler",
+      "count": 4,
+      "items": [
+        "Stok Analiz modülü eklendi",
+        "Dark mode desteği",
+        "Excel export özelliği",
+        "Gelişmiş filtreleme sistemi"
+      ]
+    },
+    {
+      "type": "improvements",
+      "title": "İyileştirmeler",
+      "count": 3,
+      "items": [
+        "Kullanıcı arayüzü yeniden tasarlandı",
+        "Performans optimizasyonları",
+        "Database query optimizasyonları"
+      ]
+    }
+  ]
+}

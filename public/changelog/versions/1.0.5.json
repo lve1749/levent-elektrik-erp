@@ -1,0 +1,41 @@
+{
+  "id": "3",
+  "version": "1.0.5",
+  "title": "Performans İyileştirmeleri ve Hata Düzeltmeleri",
+  "description": "Sistem stabilitesi artırıldı ve kritik hatalar giderildi.",
+  "date": "2024-12-18",
+  "categories": [
+    {
+      "type": "improvements",
+      "title": "İyileştirmeler",
+      "count": 6,
+      "items": [
+        "SQL query performansı %40 iyileştirildi",
+        "Sayfa yükleme süreleri optimize edildi",
+        "Cache mekanizması eklendi",
+        "API response süreleri kısaltıldı",
+        "Memory kullanımı optimize edildi",
+        "Component render optimizasyonları"
+      ]
+    },
+    {
+      "type": "fixes",
+      "title": "Düzeltmeler",
+      "count": 12,
+      "items": [
+        "Login sayfası redirect sorunu çözüldü",
+        "Session timeout problemi giderildi",
+        "Form submit hataları düzeltildi",
+        "Tarih formatı sorunları çözüldü",
+        "Pagination bug'ı düzeltildi",
+        "Search fonksiyonu hataları giderildi",
+        "Mobile responsive sorunları çözüldü",
+        "Print preview hataları düzeltildi",
+        "CSV export encoding sorunu çözüldü",
+        "Tooltip pozisyon hataları düzeltildi",
+        "Modal z-index sorunları çözüldü",
+        "Keyboard navigation hataları giderildi"
+      ]
+    }
+  ]
+}

@@ -2,6 +2,7 @@
 
 import { ChevronRight, type LucideIcon } from "lucide-react"
 import { usePathname } from "next/navigation"
+import Link from "next/link"
 import { cn } from "@/lib/utils"
 import { motion, AnimatePresence } from "framer-motion"
 import { useState } from "react"
@@ -68,10 +69,10 @@ export function NavMain({
                     <span className="text-[14px] text-[oklch(0.70_0.00_0)] dark:text-[oklch(0.40_0.00_0)]">{item.title}</span>
                   </div>
                 ) : (
-                  <a href={item.url} className="flex items-center gap-3 w-full">
+                  <Link href={item.url} className="flex items-center gap-3 w-full">
                     <item.icon className={`w-4 h-4 ${isItemActive ? "text-[oklch(0.20_0.00_0)] dark:text-[oklch(0.92_0.00_0)]" : "text-[oklch(0.56_0.00_0)] dark:text-[oklch(0.56_0.00_0)]"}`} />
                     <span className="text-[14px]">{item.title}</span>
-                  </a>
+                  </Link>
                 )}
               </SidebarMenuButton>
               {item.items?.length ? (
@@ -138,9 +139,9 @@ export function NavMain({
                                         <span className="text-[14px] ml-1 text-[oklch(0.70_0.00_0)] dark:text-[oklch(0.40_0.00_0)]">{subItem.title}</span>
                                       </div>
                                     ) : (
-                                      <a href={subItem.url} className="flex items-center">
+                                      <Link href={subItem.url} className="flex items-center">
                                         <span className="text-[14px] ml-1">{subItem.title}</span>
-                                      </a>
+                                      </Link>
                                     )}
                                   </SidebarMenuSubButton>
                                 </SidebarMenuSubItem>

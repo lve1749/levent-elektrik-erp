@@ -18,7 +18,28 @@ const nextConfig = {
       bodySizeLimit: '10mb',
     },
   },
-  webpack: (config, { isServer }) => {
+  modularizeImports: {
+    'lucide-react': {
+      transform: 'lucide-react/dist/esm/icons/{{kebabCase member}}',
+      skipDefaultConversion: true,
+    },
+  },
+  webpack: (config, { isServer, dev }) => {
+    // Sadece client bundle'ı analiz et
+    if (!isServer && process.env.ANALYZE === 'true') {
+      const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
+      config.plugins.push(
+        new BundleAnalyzerPlugin({
+          analyzerMode: 'static',
+          reportFilename: './analyze/client.html',
+          openAnalyzer: true,
+          generateStatsFile: true,
+          statsFilename: './analyze/client.json',
+        })
+      )
+    }
+
+    // Fallback configuration (mevcut webpack config'i koru)
     if (!isServer) {
       config.resolve.fallback = {
         ...config.resolve.fallback,
@@ -28,9 +49,10 @@ const nextConfig = {
         dns: false,
         child_process: false,
         dgram: false
-      };
+      }
     }
-    return config;
+    
+    return config
   },
 }
 

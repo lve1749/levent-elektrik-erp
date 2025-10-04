@@ -117,6 +117,13 @@ export default function StockAnalysisTable({
   const endIndex = Math.min(startIndex + itemsPerPage, totalItems)
   const paginatedData = data.slice(startIndex, endIndex)
   
+  // Check if all visible items in current page are selected
+  const visibleItemIds = paginatedData.map(item => item.stokKodu)
+  const internalIsAllSelected = visibleItemIds.length > 0 && 
+    visibleItemIds.every(id => selectedItems.has(id))
+  const internalIsIndeterminate = visibleItemIds.some(id => selectedItems.has(id)) && 
+    !internalIsAllSelected
+  
   // Sayfa değiştiğinde scroll'u en üste al
   React.useEffect(() => {
     // ScrollArea otomatik olarak yönetecek
@@ -231,9 +238,17 @@ export default function StockAnalysisTable({
       header: (
         <div className="flex items-center justify-center h-full">
           <Checkbox
-            checked={isAllSelected}
-            data-state={isIndeterminate ? "indeterminate" : isAllSelected ? "checked" : "unchecked"}
-            onCheckedChange={(checked) => onSelectAll?.(checked as boolean)}
+            checked={internalIsAllSelected}
+            data-state={internalIsIndeterminate ? "indeterminate" : internalIsAllSelected ? "checked" : "unchecked"}
+            onCheckedChange={(checked) => {
+              if (checked) {
+                // Select all visible items
+                onSelectAll?.(checked as boolean, visibleItemIds)
+              } else {
+                // Clear selection
+                onSelectAll?.(checked as boolean, [])
+              }
+            }}
             size="sm"
             className="relative top-0"
           />

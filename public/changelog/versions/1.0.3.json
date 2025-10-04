@@ -1,0 +1,40 @@
+{
+  "id": "5",
+  "version": "1.0.3",
+  "title": "Güvenlik Güncellemeleri",
+  "description": "Güvenlik açıkları kapatıldı ve yeni güvenlik özellikleri eklendi.",
+  "date": "2024-12-01",
+  "categories": [
+    {
+      "type": "breaking",
+      "title": "Breaking Changes",
+      "count": 2,
+      "items": [
+        "Eski authentication sistemi kaldırıldı - Yeni JWT tabanlı sistem kullanılmalı",
+        "API v1 endpoint'leri deprecate edildi - v2 endpoint'lerine geçiş yapılmalı"
+      ]
+    },
+    {
+      "type": "features",
+      "title": "Yeni Özellikler",
+      "count": 3,
+      "items": [
+        "İki faktörlü doğrulama (2FA) eklendi",
+        "Session management sistemi",
+        "Audit log sistemi"
+      ]
+    },
+    {
+      "type": "fixes",
+      "title": "Güvenlik Düzeltmeleri",
+      "count": 5,
+      "items": [
+        "XSS açıkları kapatıldı",
+        "SQL injection koruması güçlendirildi",
+        "CSRF token validation eklendi",
+        "Rate limiting iyileştirildi",
+        "Password encryption güncellendi"
+      ]
+    }
+  ]
+}

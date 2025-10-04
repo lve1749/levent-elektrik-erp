@@ -9,37 +9,7 @@ import { Area, AreaChart, XAxis, YAxis, ReferenceLine, ResponsiveContainer } fro
 import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
 import { tr } from 'date-fns/locale';
-
-interface HareketDetay {
-  stokKodu: string;
-  stokIsmi: string;
-  girisMiktari: number;
-  cikisMiktari: number;
-  hareketTarihi: Date | string;
-  hareketTipi: string;
-  stokEtkisi: string;
-  evrakNo: string;
-  cariKodu: string;
-  aciklama: string;
-  normalKati?: number;
-  renkKodu: string;
-  evrakTip: number;
-}
-
-interface OzetBilgi {
-  netGirisMiktari: number;
-  netCikisMiktari: number;
-  kalanMiktar: number;
-  projeHareketi: number;
-  degisim: number;
-  sayim: number;
-  normalGirisSayisi: number;
-  normalCikisSayisi: number;
-  satisIadesiSayisi: number;
-  alisIadesiSayisi: number;
-  ortNormalGiris: number;
-  ortNormalSatis: number;
-}
+import { HareketDetay, OzetBilgi } from '@/types/stock';
 
 interface LineChart6Props {
   hareketler: HareketDetay[];
@@ -85,9 +55,54 @@ export default function LineChart6({ hareketler = [], ozet }: LineChart6Props) {
   const platformData = useMemo(() => {
     if (!hareketler || hareketler.length === 0) return [];
 
-    // Tarihe göre grupla
-    const groupedData = hareketler.reduce((acc: any, hareket) => {
-      const date = format(new Date(hareket.hareketTarihi), 'yyyy-MM-dd');
+    // Hareketleri tarihe göre sırala (eskiden yeniye)
+    const sortedHareketler = [...hareketler].sort((a, b) => {
+      const dateA = new Date(a.hareketTarihi).getTime();
+      const dateB = new Date(b.hareketTarihi).getTime();
+      return dateA - dateB;
+    });
+
+    // Her hareketi ayrı bir veri noktası olarak işle
+    let kumulatifKalan = 0;
+    const processedData = sortedHareketler.map((hareket) => {
+      // Kümülatif kalan hesapla
+      kumulatifKalan += (hareket.girisMiktari - hareket.cikisMiktari);
+      
+      // Proje hareketi kontrolü - hareketTipi'nden kontrol et
+      const isProje = hareket.hareketTipi === 'PROJE' || 
+                      hareket.hareketTipi === 'Proje' ||
+                      (hareket.aciklama && hareket.aciklama.includes('PROJE'));
+      
+      // İade kontrolü
+      const isIade = hareket.hareketTipi && (
+        hareket.hareketTipi.includes('İADE') || 
+        hareket.hareketTipi.includes('İade') ||
+        hareket.hareketTipi.includes('SATIŞ İADESİ') ||
+        hareket.hareketTipi.includes('ALIŞ İADESİ')
+      );
+      
+      // Değişim kontrolü
+      const isDegisim = hareket.hareketTipi && hareket.hareketTipi.includes('DEĞİŞİM');
+      
+      // Sayım kontrolü
+      const isSayim = hareket.hareketTipi && hareket.hareketTipi.includes('SAYIM');
+      
+      return {
+        date: format(new Date(hareket.hareketTarihi), 'yyyy-MM-dd'),
+        netGiris: hareket.girisMiktari || 0,
+        netCikis: hareket.cikisMiktari || 0,
+        kalanMiktar: kumulatifKalan,
+        proje: isProje ? (hareket.girisMiktari || hareket.cikisMiktari || 1) : 0,
+        iade: isIade ? (hareket.girisMiktari || hareket.cikisMiktari || 0) : 0,
+        degisim: isDegisim ? 1 : 0,
+        sayim: isSayim ? 1 : 0,
+        diger: (isDegisim || isSayim) ? 1 : 0
+      };
+    });
+
+    // Aynı tarihteki hareketleri grupla
+    const groupedData = processedData.reduce((acc: any, item) => {
+      const date = item.date;
       
       if (!acc[date]) {
         acc[date] = {
@@ -103,46 +118,29 @@ export default function LineChart6({ hareketler = [], ozet }: LineChart6Props) {
         };
       }
       
-      // Giriş miktarlarını topla
-      acc[date].netGiris += hareket.girisMiktari || 0;
-      
-      // Çıkış miktarlarını topla  
-      acc[date].netCikis += hareket.cikisMiktari || 0;
-      
-      // Proje hareketlerini say
-      if (hareket.aciklama && hareket.aciklama.includes('PROJE')) {
-        acc[date].proje += 1;
-      }
-      
-      // İade miktarlarını topla (sayı değil miktar)
-      if (hareket.hareketTipi && (hareket.hareketTipi.includes('İADE') || hareket.hareketTipi.includes('İade'))) {
-        acc[date].iade += (hareket.girisMiktari || 0) + (hareket.cikisMiktari || 0);
-      }
-      
-      // Değişim hareketlerini say
-      if (hareket.hareketTipi && hareket.hareketTipi.includes('DEĞİŞİM')) {
-        acc[date].degisim += 1;
-        acc[date].diger += 1; // Diğer toplamına da ekle
-      }
-      
-      // Sayım hareketlerini say
-      if (hareket.hareketTipi && hareket.hareketTipi.includes('SAYIM')) {
-        acc[date].sayim += 1;
-        acc[date].diger += 1; // Diğer toplamına da ekle
-      }
+      // Değerleri topla
+      acc[date].netGiris += item.netGiris;
+      acc[date].netCikis += item.netCikis;
+      acc[date].kalanMiktar = item.kalanMiktar; // Son kalan miktarı kullan
+      acc[date].proje += item.proje;
+      acc[date].iade += item.iade;
+      acc[date].degisim += item.degisim;
+      acc[date].sayim += item.sayim;
+      acc[date].diger += item.diger;
       
       return acc;
     }, {});
 
-    // Kümülatif kalan miktar hesapla
-    let kumulatif = 0;
+    // Objeyi diziye çevir ve sırala
     const dataArray = Object.values(groupedData).sort((a: any, b: any) => 
       new Date(a.date).getTime() - new Date(b.date).getTime()
     );
-    
-    dataArray.forEach((day: any) => {
-      kumulatif += (day.netGiris - day.netCikis);
-      day.kalanMiktar = kumulatif;
+
+    console.log('Platform Data Debug:', {
+      originalCount: hareketler.length,
+      processedCount: dataArray.length,
+      sampleData: dataArray.slice(0, 3),
+      projeCount: dataArray.filter((d: any) => d.proje > 0).length
     });
 
     return dataArray;
@@ -151,33 +149,51 @@ export default function LineChart6({ hareketler = [], ozet }: LineChart6Props) {
   // Dinamik metrik yapılandırması
   const metrics = useMemo(() => {
     if (!ozet) {
+      // Eğer özet yoksa hareketlerden hesapla
+      const calculated = {
+        netGiris: hareketler.reduce((sum, h) => sum + (h.girisMiktari || 0), 0),
+        netCikis: hareketler.reduce((sum, h) => sum + (h.cikisMiktari || 0), 0),
+        kalanMiktar: 0,
+        proje: 0,
+        iade: 0,
+        diger: 0
+      };
+      
+      // Kümülatif kalan hesapla
+      calculated.kalanMiktar = calculated.netGiris - calculated.netCikis;
+      
+      // Proje sayısını hesapla
+      calculated.proje = hareketler.filter(h => 
+        h.hareketTipi === 'PROJE' || h.hareketTipi === 'Proje'
+      ).length;
+      
       return [
         {
           key: 'netGiris',
           label: 'Net Giriş',
-          value: 0,
+          value: calculated.netGiris,
           subText: '',
           format: formatNumber,
         },
         {
           key: 'netCikis',
           label: 'Net Çıkış',
-          value: 0,
+          value: calculated.netCikis,
           subText: '',
           format: formatNumber,
         },
         {
           key: 'kalanMiktar',
           label: 'Kalan Miktar',
-          value: 0,
+          value: calculated.kalanMiktar,
           subText: '',
           format: formatNumber,
         },
         {
           key: 'proje',
           label: 'Proje',
-          value: 0,
-          subText: '',
+          value: calculated.proje,
+          subText: `${calculated.proje} Adet`,
           format: (val: number) => val.toLocaleString('tr-TR'),
         },
         {
@@ -185,7 +201,7 @@ export default function LineChart6({ hareketler = [], ozet }: LineChart6Props) {
           label: 'İade',
           value: 0,
           subText: '',
-          format: (val: number) => val.toLocaleString('tr-TR'),
+          format: formatNumber,
         },
         {
           key: 'diger',
@@ -254,7 +270,7 @@ export default function LineChart6({ hareketler = [], ozet }: LineChart6Props) {
         format: (val: number) => val.toLocaleString('tr-TR'),
       },
     ];
-  }, [ozet]);
+  }, [ozet, hareketler]);
 
   // Chart config
   const chartConfig = {

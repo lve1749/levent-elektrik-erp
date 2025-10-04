@@ -1,0 +1,35 @@
+{
+  "id": "6",
+  "version": "1.0.2",
+  "title": "İlk Kararlı Sürüm",
+  "description": "Production ortamı için ilk kararlı sürüm yayınlandı.",
+  "date": "2024-11-20",
+  "categories": [
+    {
+      "type": "features",
+      "title": "Temel Özellikler",
+      "count": 8,
+      "items": [
+        "Kullanıcı yönetimi sistemi",
+        "Rol tabanlı yetkilendirme",
+        "Stok takip modülü",
+        "Raporlama sistemi",
+        "Dashboard ve widget'lar",
+        "Bildirim sistemi",
+        "Ayarlar ve konfigürasyon",
+        "Yardım ve dokümantasyon"
+      ]
+    },
+    {
+      "type": "improvements",
+      "title": "Beta'dan Sonra İyileştirmeler",
+      "count": 4,
+      "items": [
+        "UI/UX iyileştirmeleri",
+        "Performance optimizasyonları",
+        "Database schema güncellemeleri",
+        "Error handling iyileştirmeleri"
+      ]
+    }
+  ]
+}

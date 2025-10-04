@@ -103,6 +103,9 @@ export function AppSidebar({ lastRefreshTime, alertCount, refreshHistory = [], .
               </div>
               <div className="grid flex-1 text-left text-sm leading-tight">
                 <span className="truncate font-medium">Levent Elektrik</span>
+                <span className="truncate text-[10px] font-light text-[oklch(0.56_0.00_0)] dark:text-[oklch(0.56_0.00_0)]">
+                  v{process.env.NEXT_PUBLIC_VERSION || '1.0.0'}
+                </span>
               </div>
             </SidebarMenuButton>
           </SidebarMenuItem>

@@ -26,7 +26,8 @@
     "test:installer": "dist\\\"Levent Elektrik Setup 1.0.7.exe\"",
     "build:msi": "npm run build && npm run copy:static && electron-builder --win msi",
     "prebuild:msi": "npm run clean:dist",
-    "clean:dist": "rmdir /s /q dist 2>nul || echo Dist cleaned"
+    "clean:dist": "rmdir /s /q dist 2>nul || echo Dist cleaned",
+    "changelog:add": "node scripts/add-changelog.js"
   },
   "dependencies": {
     "@base-ui-components/react": "^1.0.0-beta.1",

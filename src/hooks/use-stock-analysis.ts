@@ -1,3 +1,4 @@
+import { safeSessionStorage } from '@/lib/safe-storage'
 import { useState, useCallback, useRef, useEffect } from 'react'
 import { StokAnalizRaporu, AnalizFiltre } from '@/types'
 import { formatDateForSQL } from '@/lib/formatters'
@@ -10,24 +11,14 @@ export function useStockAnalysis(filters: AnalizFiltre) {
   
   // Aktif request'i takip etmek için
   const abortControllerRef = useRef<AbortController | null>(null)
+  const requestIdRef = useRef<number>(0)
 
   // Component mount olduktan sonra sessionStorage'dan verileri yükle
   useEffect(() => {
     if (typeof window !== 'undefined' && !isInitialized) {
-      try {
-        const stored = sessionStorage.getItem('stockAnalysisData')
-        if (stored) {
-          const parsedData = JSON.parse(stored)
-          if (parsedData && parsedData.length > 0) {
-            // Eğer sadeleştirilmiş veri ise (eksik alanlar varsa), veriyi olduğu gibi kullan
-            // Aksi halde tam veriyi kullan
-            setData(parsedData)
-          }
-        }
-      } catch (e) {
-        console.error('SessionStorage parse error:', e)
-        // Hatalı veri varsa temizle
-        sessionStorage.removeItem('stockAnalysisData')
+      const storedData = safeSessionStorage.getItem<StokAnalizRaporu[]>('stockAnalysisData', [])
+      if (storedData.length > 0) {
+        setData(storedData)
       }
       setIsInitialized(true)
     }
@@ -36,46 +27,30 @@ export function useStockAnalysis(filters: AnalizFiltre) {
   // Data değiştiğinde sessionStorage'a kaydet
   useEffect(() => {
     if (typeof window !== 'undefined' && data.length > 0 && isInitialized) {
-      try {
-        // Önce veriyi kaydetmeyi dene
-        sessionStorage.setItem('stockAnalysisData', JSON.stringify(data))
-      } catch (e) {
-        // Kota hatası durumunda
-        if (e instanceof DOMException && e.code === 22) {
-          console.warn('SessionStorage quota exceeded, clearing old data...')
-          
-          // Eski verileri temizle
-          const keysToKeep = ['stockAnalysisFilters'] // Sadece filtreleri koru
-          const allKeys = Object.keys(sessionStorage)
-          
-          allKeys.forEach(key => {
-            if (!keysToKeep.includes(key) && key.startsWith('stockAnalysis')) {
-              sessionStorage.removeItem(key)
-            }
-          })
-          
-          // Tekrar kaydetmeyi dene (sadece temel veri)
-          try {
-            // Veriyi sadeleştir - sadece görünen kolonları tut
-            const simplifiedData = data.map(item => ({
-              stokKodu: item.stokKodu,
-              stokIsmi: item.stokIsmi,
-              kalanMiktar: item.kalanMiktar,
-              aylikOrtalamaSatis: item.aylikOrtalamaSatis,
-              ortalamaAylikStok: item.ortalamaAylikStok,
-              onerilenSiparis: item.onerilenSiparis
-            }))
-            sessionStorage.setItem('stockAnalysisData', JSON.stringify(simplifiedData))
-          } catch (e2) {
-            console.error('Could not save data even after cleanup:', e2)
-            // En son çare: veriyi kaydetme
-          }
-        }
+      // safeSessionStorage otomatik quota yönetimi yapar
+      const success = safeSessionStorage.setItem('stockAnalysisData', data)
+      
+      // Eğer başarısız olursa (çok büyük veri), sadeleştir
+      if (!success && data.length > 100) {
+        console.warn('Data too large, simplifying...')
+        const simplifiedData = data.map(item => ({
+          stokKodu: item.stokKodu,
+          stokIsmi: item.stokIsmi,
+          kalanMiktar: item.kalanMiktar,
+          aylikOrtalamaSatis: item.aylikOrtalamaSatis,
+          ortalamaAylikStok: item.ortalamaAylikStok,
+          onerilenSiparis: item.onerilenSiparis
+        }))
+        safeSessionStorage.setItem('stockAnalysisData', simplifiedData)
       }
     }
   }, [data, isInitialized])
 
   const fetchData = useCallback(async () => {
+    // Request ID increment
+    requestIdRef.current += 1
+    const currentRequestId = requestIdRef.current
+    
     // Önceki request varsa iptal et
     if (abortControllerRef.current) {
       abortControllerRef.current.abort()
@@ -123,6 +98,12 @@ export function useStockAnalysis(filters: AnalizFiltre) {
         return { success: false, error: 'İptal edildi' }
       }
       
+      // Bu request eski bir request ise sonucu ignore et
+      if (currentRequestId !== requestIdRef.current) {
+        console.log('Eski request sonucu ignore edildi:', currentRequestId)
+        return { success: false, error: 'Eski request' }
+      }
+      
       if (result.success) {
         setData(result.data || [])
         return { success: true, data: result.data || [] }
@@ -150,16 +131,19 @@ export function useStockAnalysis(filters: AnalizFiltre) {
   }, [filters])
 
   // Component unmount olduğunda aktif request'i iptal et
-  const cleanup = useCallback(() => {
-    if (abortControllerRef.current) {
-      abortControllerRef.current.abort()
+  useEffect(() => {
+    return () => {
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort()
+        abortControllerRef.current = null
+      }
     }
   }, [])
 
   // SessionStorage'ı temizle (yeni analiz için)
   const clearStoredData = useCallback(() => {
     if (typeof window !== 'undefined') {
-      sessionStorage.removeItem('stockAnalysisData')
+      safeSessionStorage.removeItem('stockAnalysisData')
     }
   }, [])
 
@@ -167,8 +151,6 @@ export function useStockAnalysis(filters: AnalizFiltre) {
     data, 
     loading, 
     error, 
-    refetch: fetchData,
-    cleanup,
-    clearStoredData 
+    refetch: fetchData
   }
 }

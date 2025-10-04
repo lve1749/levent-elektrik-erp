@@ -37,45 +37,8 @@ import { tr } from 'date-fns/locale';
 import { cn } from '@/lib/utils';
 import { useCopyToClipboard } from '@/hooks/use-copy-to-clipboard';
 import { motion, AnimatePresence } from 'framer-motion';
-
-interface HareketDetay {
-  stokKodu: string;
-  stokIsmi: string;
-  girisMiktari: number;
-  cikisMiktari: number;
-  hareketTarihi: Date;
-  hareketTipi: string;
-  stokEtkisi: string;
-  evrakNo: string;
-  cariKodu: string;
-  aciklama: string;
-  normalKati?: number;
-  renkKodu: string;
-  evrakTip: number;
-  tip: number;
-  cins: number;
-  iadeFlag: number;
-  kalanMiktar?: number;
-}
-
-interface OzetBilgi {
-  netGirisMiktari: number;
-  netCikisMiktari: number;
-  kalanMiktar: number;
-  toplamHareket: number;
-  normalGirisSayisi: number;
-  normalCikisSayisi: number;
-  satisIadesiSayisi: number;
-  alisIadesiSayisi: number;
-  projeHareketi: number;
-  degisim: number;
-  sayim: number;
-  ortNormalGiris?: number;
-  ortNormalSatis?: number;
-  standartSapma?: number;
-  ortalamaSatis?: number;
-  ustSinir?: number;
-}
+import { HareketDetay, OzetBilgi } from '@/types/stock';
+import { ChartErrorBoundary } from '@/components/ui/chart-error-boundary';
 
 interface HareketDetayDialogProps {
   isOpen: boolean;
@@ -93,6 +56,16 @@ interface HareketChartProps {
 }
 
 function HareketChart({ hareketler, ozet }: HareketChartProps) {
+  // Debug için
+  console.log('HareketChart Debug:', {
+    hareketlerCount: hareketler.length,
+    ozetData: ozet,
+    sampleHareket: hareketler[0],
+    projeHareketleri: hareketler.filter(h => 
+      h.hareketTipi === 'PROJE' || h.hareketTipi === 'Proje'
+    )
+  });
+
   if (!ozet || hareketler.length === 0) return null;
   
   return (
@@ -432,39 +405,66 @@ export default function HareketDetayDialog({
   };
 
   useEffect(() => {
-    if (isOpen && stokKodu) {
-      fetchHareketDetay();
-    }
-  }, [isOpen, stokKodu, baslangicTarih, bitisTarih]);
-
-  const fetchHareketDetay = async () => {
-    setLoading(true);
-    setError(null);
+    let isMounted = true;
     
-    try {
-      const params = new URLSearchParams({
-        stokKodu,
-        baslangicTarih,
-        bitisTarih
-      });
-      
-      const response = await fetch(`/api/stok-hareket-detay?${params}`);
-      
-      if (!response.ok) {
-        throw new Error('Hareket detayları yüklenemedi');
+    const fetchData = async () => {
+      if (isOpen && stokKodu) {
+        setLoading(true);
+        setError(null);
+        
+        try {
+          const params = new URLSearchParams({
+            stokKodu,
+            baslangicTarih,
+            bitisTarih
+          });
+          
+          const response = await fetch(`/api/stok-hareket-detay?${params}`);
+          
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          
+          const data = await response.json();
+          
+          // Veri doğrulama
+          if (!data.success) {
+            throw new Error(data.error || 'Veri alınamadı');
+          }
+          
+          // Veri dönüşümü ve temizleme
+          const cleanedData = (data.data || []).map((item: any) => ({
+            ...item,
+            girisMiktari: Number(item.girisMiktari) || 0,
+            cikisMiktari: Number(item.cikisMiktari) || 0,
+            hareketTarihi: item.hareketTarihi || new Date(),
+            normalKati: item.normalKati ? Number(item.normalKati) : undefined
+          }));
+          
+          if (isMounted) {
+            setHareketler(cleanedData);
+            setOzet(data.ozet || null);
+          }
+          
+        } catch (err) {
+          console.error('Hareket detay hatası:', err);
+          if (isMounted) {
+            setError(err instanceof Error ? err.message : 'Bir hata oluştu');
+          }
+        } finally {
+          if (isMounted) {
+            setLoading(false);
+          }
+        }
       }
-      
-      const data = await response.json();
-      setHareketler(data.data || []);
-      setOzet(data.ozet || null);
-      
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Bir hata oluştu');
-    } finally {
-      setLoading(false);
-    }
-  };
-
+    };
+    
+    fetchData();
+    
+    return () => {
+      isMounted = false;
+    };
+  }, [isOpen, stokKodu, baslangicTarih, bitisTarih]);
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -598,7 +598,9 @@ export default function HareketDetayDialog({
             {/* Line Chart Modülü */}
             <div className="px-6 py-2 overflow-x-hidden">
               <div className="w-full max-w-full" style={{ minWidth: 0 }}>
-                <HareketChart hareketler={hareketler} ozet={ozet} />
+                <ChartErrorBoundary>
+                  <HareketChart hareketler={hareketler} ozet={ozet} />
+                </ChartErrorBoundary>
               </div>
             </div>
 

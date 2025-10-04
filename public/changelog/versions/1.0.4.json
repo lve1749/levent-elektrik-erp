@@ -1,0 +1,45 @@
+{
+  "id": "4",
+  "version": "1.0.4",
+  "title": "Kullanıcı Deneyimi Güncellemeleri",
+  "description": "Kullanıcı geri bildirimlerine göre iyileştirmeler ve yeni özellikler eklendi.",
+  "date": "2024-12-10",
+  "categories": [
+    {
+      "type": "features",
+      "title": "Yeni Özellikler",
+      "count": 5,
+      "items": [
+        "Gelişmiş arama fonksiyonu",
+        "Özelleştirilebilir dashboard widget'ları",
+        "Toplu işlem özellikleri",
+        "Yeni rapor şablonları",
+        "Otomatik kaydetme özelliği"
+      ]
+    },
+    {
+      "type": "improvements",
+      "title": "İyileştirmeler",
+      "count": 7,
+      "items": [
+        "Form validation mesajları iyileştirildi",
+        "Hata mesajları daha açıklayıcı hale getirildi",
+        "Loading state'leri eklendi",
+        "Tooltip'ler ve yardım metinleri güncellendi",
+        "Klavye erişilebilirliği artırıldı",
+        "Tab navigation iyileştirildi",
+        "Screen reader desteği eklendi"
+      ]
+    },
+    {
+      "type": "api",
+      "title": "API Güncellemeleri",
+      "count": 3,
+      "items": [
+        "Yeni REST endpoint'leri eklendi",
+        "API rate limiting implementasyonu",
+        "API dokümantasyonu güncellendi"
+      ]
+    }
+  ]
+}

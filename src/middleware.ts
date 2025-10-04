@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
 // Korumalı rotalar
-const protectedRoutes = ['/', '/listeler', '/siparisler', '/arsiv']
+const protectedRoutes = ['/', '/stok-analiz', '/listeler', '/siparisler', '/arsiv']
 // Public rotalar
 const publicRoutes = ['/login']
 
@@ -36,10 +36,10 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(url)
   }
 
-  // Oturum varsa ve login sayfasına gitmeye çalışıyorsa ana sayfaya yönlendir
+  // Oturum varsa ve login sayfasına gitmeye çalışıyorsa stok analize yönlendir
   if (sessionToken && isPublicRoute) {
     const url = request.nextUrl.clone()
-    url.pathname = '/'
+    url.pathname = '/stok-analiz'
     return NextResponse.redirect(url)
   }
 
